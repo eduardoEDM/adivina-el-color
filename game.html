@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontrar el Color</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        }
+        #game-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .color-button {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .color-button:hover {
+            transform: scale(1.1);
+        }
+        #color-indicator {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            transition: background-color 0.5s;
+        }
+        .animated {
+            animation: bounce 0.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        #message {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+        #title {
+            font-size: 2em;
+            animation: rainbow 3s infinite; 
+        }
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: green; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .action-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF; 
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .action-button:hover {
+            background-color: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1 id="title">¡Adivina el Color!</h1>
+        <div id="color-indicator"></div>
+        <button class="color-button" style="background-color: red;" onclick="selectColor('red')"></button>
+        <button class="color-button" style="background-color: blue;" onclick="selectColor('blue')"></button>
+        <button class="color-button" style="background-color: yellow;" onclick="selectColor('yellow')"></button>
+        <p id="message"></p>
+        <p id="timer">Tiempo restante: <span id="time-value">60</span> segundos</p>
+        <div class="button-container">
+            <button class="action-button" id="restart-button" style="display: none;" onclick="restartGame()">Reiniciar Juego</button>
+            <button class="action-button" onclick="exitGame()">Salir</button>
+        </div>
+    </div>
+
+    <script>
+        const colors = ['red', 'blue', 'yellow'];
+        let currentColor = '';
+        let score = 0;
+        let timeLeft = 60;
+        let timerId;
+
+        
+        function startTimer() {
+            timerId = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time-value').innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    alert("¡Se acabó el tiempo!");
+                    disableButtons(); 
+                }
+            }, 1000);
+        }
+
+        
+        function disableButtons() {
+            const buttons = document.querySelectorAll('.color-button');
+            buttons.forEach(button => button.disabled = true); 
+        }
+
+        function startGame() {
+            score = 0; 
+            timeLeft = 60; 
+            document.getElementById('message').innerText = 'Selecciona un color:';
+            document.getElementById('restart-button').style.display = 'none';
+            changeColorIndicator();
+            startTimer();
+        }
+
+        function changeColorIndicator() {
+            currentColor = colors[Math.floor(Math.random() * colors.length)];
+            const colorIndicator = document.getElementById('color-indicator');
+            colorIndicator.style.backgroundColor = currentColor;
+            colorIndicator.classList.add('animated');
+        }
+
+        function selectColor(color) {
+            const message = document.getElementById('message');
+            if (color === currentColor) {
+                score++;
+                message.innerText = '¡Correcto! Puntuación: ' + score;
+                changeColorIndicator();
+            } else {
+                message.innerText = 'Intenta de nuevo.';
+            }
+        }
+
+        function endGame() {
+            const message = document.getElementById('message');
+            message.innerText = '¡Juego terminado! Tu puntuación final es: ' + score;
+            document.getElementById('restart-button').style.display = 'block';
+            document.getElementById('color-indicator').classList.remove('animated');
+            clearInterval(timerId); 
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function exitGame() {
+            window.location.href = 'end.html';
+            const score = document.getElementById('message').innerText.match(/\d+/)[0]; 
+            localStorage.setItem('finalScore', score); 
+             
+        }
+
+        window.onload = startGame; 
+    </script>
+</body>
+</html>

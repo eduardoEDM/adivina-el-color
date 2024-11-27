@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Terminado</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        }
+        #end-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #final-score {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        #skill {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .action-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="end-container">
+        <h1>🎊¡Juego Terminado!🎊</h1>
+        <p id="final-score">Tu puntuación final es: <span id="score-value"></span></p>
+        <p id="skill">Habilidad adquirida: <span id="skill-value"></span></p>
+        <button class="action-button" onclick="goBack()">Volver a Jugar</button>
+    </div>
+
+    <script>
+        
+        function displayResults(score, skill) {
+            document.getElementById('score-value').innerText = score;
+            document.getElementById('skill-value').innerText = skill;
+        }
+
+        function goBack() {
+            window.location.href = 'index.html'; 
+        }
+
+        
+        window.onload = function() {
+            const score = localStorage.getItem('finalScore') || 0;
+            const skill = "🎖️Reconocimiento de colores"; 
+            displayResults(score, skill);
+        };
+    </script>
+</body>
+</html>
